@@ -2,14 +2,11 @@ package com.agawrysiuk.docx4jprintimagestodocx;
 
 import com.agawrysiuk.docx4jprintimagestodocx.printer.Docx4JPrinter;
 import lombok.extern.slf4j.Slf4j;
-import org.docx4j.openpackaging.exceptions.Docx4JException;
-import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
-import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
+import org.docx4j.model.structure.PageSizePaper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
 
 @Slf4j
 @SpringBootApplication
@@ -26,7 +23,8 @@ public class Docx4jPrintImagesToDocxApplication {
 				.pictureLink("https://img.scryfall.com/cards/large/front/1/9/192452f8-93c2-4a20-a52b-0093741a9e45.jpg?1562783094")
 				.fileName("test-print.docx")
 				.landscape(true)
-				.maxWidth(3580)
+				.maxWidth(3600) //3580
+				.pageSize(PageSizePaper.LETTER)
 				.build();
 		try {
 			printer.print();
