@@ -24,6 +24,8 @@ public class Docx4jPrintImagesToDocxApplication {
 		Docx4JPrinter printer = Docx4JPrinter.builder()
 				.pictureLink("images/c17-48-the-ur-dragon.jpg")
 				.fileName("test-print.docx")
+				.landscape(true)
+				.maxWidth(3580)
 				.build();
 		try {
 			printer.print();

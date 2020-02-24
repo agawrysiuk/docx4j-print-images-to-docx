@@ -15,6 +15,8 @@ public class ImageConverter {
     public byte[] convertFileToBytes(File file) throws IOException {
         InputStream is = new FileInputStream(file);
         long length = file.length();
+
+        //length must be integer, should be ok for most cases
         if (length > Integer.MAX_VALUE) {
             log.warn("File is too big!");
             return null;
