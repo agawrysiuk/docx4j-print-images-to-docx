@@ -1,5 +1,7 @@
 package com.agawrysiuk.docx4jprintimagestodocx;
 
+import com.agawrysiuk.docx4jprintimagestodocx.printer.Docx4JPrinter;
+import lombok.extern.slf4j.Slf4j;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
@@ -9,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import javax.annotation.PostConstruct;
 import java.io.File;
 
+@Slf4j
 @SpringBootApplication
 public class Docx4jPrintImagesToDocxApplication {
 
@@ -17,12 +20,17 @@ public class Docx4jPrintImagesToDocxApplication {
 	}
 
 	@PostConstruct
-	private void init() throws Docx4JException {
-		WordprocessingMLPackage wordPackage = WordprocessingMLPackage.createPackage();
-		MainDocumentPart mainDocumentPart = wordPackage.getMainDocumentPart();
-		mainDocumentPart.addParagraphOfText("It's a test page!");
-		File exportFile = new File("test.docx");
-		wordPackage.save(exportFile);
+	private void init() {
+		Docx4JPrinter printer = Docx4JPrinter.builder()
+				.pictureLink("images/c17-48-the-ur-dragon.jpg")
+				.fileName("test-print.docx")
+				.build();
+		try {
+			printer.print();
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.warn("Can't print the picture!");
+		}
 	}
 
 }
