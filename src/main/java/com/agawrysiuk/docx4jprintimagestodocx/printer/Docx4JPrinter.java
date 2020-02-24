@@ -16,7 +16,10 @@ import org.docx4j.wml.P;
 import org.docx4j.wml.R;
 import org.springframework.core.io.ClassPathResource;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URL;
 
 import static org.docx4j.wml.STPageOrientation.LANDSCAPE;
 import static org.docx4j.wml.STPageOrientation.PORTRAIT;
@@ -28,18 +31,26 @@ public class Docx4JPrinter {
     private String pictureLink;
     private String fileName;
     private boolean landscape;
+    private boolean internetLink;
     private int maxWidth;
 
     public void print() throws Exception {
         WordprocessingMLPackage wordPackage = WordprocessingMLPackage.createPackage(PageSizePaper.A4,landscape);
 
-        //won't work in a jar file, you need to use a stream
-        ClassPathResource resource = new ClassPathResource(pictureLink);
-
-        byte[] bytes = new ImageConverter().convertFileToBytes(resource.getFile());
+        ImageConverter converter = new ImageConverter();
+        byte[] bytes;
+        if (internetLink) {
+            BufferedImage bufferedImage = ImageIO.read(new URL(pictureLink));
+            bytes = converter.convertBufferedImageToBytes(bufferedImage);
+        } else {
+            //won't work in a jar file, you need to use a iostream
+            ClassPathResource resource = new ClassPathResource(pictureLink);
+            bytes = converter.convertFileToBytes(resource.getFile());
+        }
 
         if (bytes == null) {
             log.warn("Picture too big. Abandoning.");
+            return;
         }
 
         addImageToWord(wordPackage, bytes);

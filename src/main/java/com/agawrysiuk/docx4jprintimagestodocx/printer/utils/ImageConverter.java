@@ -3,10 +3,9 @@ package com.agawrysiuk.docx4jprintimagestodocx.printer.utils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 
 @Slf4j
 @Data
@@ -32,5 +31,14 @@ public class ImageConverter {
         is.close();
 
         return bytes;
+    }
+
+    public byte[] convertBufferedImageToBytes(BufferedImage image) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write( image, "jpg", baos );
+        baos.flush();
+        byte[] imageInByte = baos.toByteArray();
+        baos.close();
+        return imageInByte;
     }
 }

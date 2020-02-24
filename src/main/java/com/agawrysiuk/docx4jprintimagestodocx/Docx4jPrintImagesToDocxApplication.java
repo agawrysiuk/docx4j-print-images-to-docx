@@ -22,7 +22,8 @@ public class Docx4jPrintImagesToDocxApplication {
 	@PostConstruct
 	private void init() {
 		Docx4JPrinter printer = Docx4JPrinter.builder()
-				.pictureLink("images/c17-48-the-ur-dragon.jpg")
+				.internetLink(true)
+				.pictureLink("https://img.scryfall.com/cards/large/front/1/9/192452f8-93c2-4a20-a52b-0093741a9e45.jpg?1562783094")
 				.fileName("test-print.docx")
 				.landscape(true)
 				.maxWidth(3580)
