@@ -1,6 +1,7 @@
 package com.agawrysiuk.docx4jprintimagestodocx.downloader;
 
 import com.agawrysiuk.docx4jprintimagestodocx.data.Card;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
@@ -29,8 +30,12 @@ public class Downloader {
             return null;
         }
 
-        //...
+        JSONObject downloadedCard = new JSONObject(scryfallDocument.body().text());
 
-        return null;
+        // TODO: 2020-02-25 add some serializer
+        Card card = new Card();
+        card.setCardImageLarge(downloadedCard.getJSONObject("image_uris").getString("large"));
+
+        return card;
     }
 }
