@@ -1,6 +1,6 @@
 package com.agawrysiuk.docx4jprintimagestodocx.printer;
 
-import com.agawrysiuk.docx4jprintimagestodocx.printer.utils.ImageConverter;
+import com.agawrysiuk.docx4jprintimagestodocx.service.ImageConverter;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,6 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.math.BigInteger;
 import java.net.URL;
-import java.util.Random;
 
 @Slf4j
 @Data
@@ -38,9 +37,7 @@ public class Docx4JPrinter {
 
         setPageMargins(wordPackage.getMainDocumentPart().getContents().getBody());
 
-
         ObjectFactory factory = new ObjectFactory();
-
         P paragraph = factory.createP();
 
         for (int i = 0; i < pictureLinks.length; i++) {

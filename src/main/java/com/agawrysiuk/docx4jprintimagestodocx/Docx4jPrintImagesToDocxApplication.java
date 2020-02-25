@@ -2,14 +2,11 @@ package com.agawrysiuk.docx4jprintimagestodocx;
 
 import com.agawrysiuk.docx4jprintimagestodocx.printer.Docx4JPrinter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ArrayUtils;
 import org.docx4j.model.structure.PageSizePaper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.annotation.PostConstruct;
-import java.lang.reflect.Array;
-import java.util.Arrays;
 
 @Slf4j
 @SpringBootApplication

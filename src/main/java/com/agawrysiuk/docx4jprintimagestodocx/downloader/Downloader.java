@@ -10,6 +10,14 @@ import java.io.IOException;
 @Component
 public class Downloader {
 
+    public Card[] downloadBulk(String[] cardTitles) {
+        Card[] cardList = new Card[cardTitles.length];
+        for (int i = 0; i < cardTitles.length; i++) {
+            cardList[i] = downloadCard(cardTitles[i]);
+        }
+        return cardList;
+    }
+
     public Card downloadCard(String cardTitle){
 
         cardTitle = cardTitle.replace(" ","+"); //change to string

@@ -1,4 +1,4 @@
-package com.agawrysiuk.docx4jprintimagestodocx.printer.utils;
+package com.agawrysiuk.docx4jprintimagestodocx.service;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
