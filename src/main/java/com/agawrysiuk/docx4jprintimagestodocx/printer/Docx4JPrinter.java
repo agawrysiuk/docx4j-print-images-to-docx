@@ -17,6 +17,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.math.BigInteger;
 import java.net.URL;
+import java.util.Random;
 
 @Slf4j
 @Data
@@ -31,10 +32,16 @@ public class Docx4JPrinter {
     private boolean internetLink;
     private String[] pictureLinks;
 
+
     public void print() throws Exception {
         WordprocessingMLPackage wordPackage = WordprocessingMLPackage.createPackage(pageSize, landscape);
 
         setPageMargins(wordPackage.getMainDocumentPart().getContents().getBody());
+
+
+        ObjectFactory factory = new ObjectFactory();
+
+        P paragraph = factory.createP();
 
         for (int i = 0; i < pictureLinks.length; i++) {
             byte[] bytes = createByteArray(pictureLinks[i]);
@@ -42,8 +49,9 @@ public class Docx4JPrinter {
                 log.warn("Picture too big. Abandoning.");
                 return;
             }
-            addImageToWord(wordPackage, bytes);
+            addImageToWord(wordPackage, bytes, paragraph,factory);
         }
+        wordPackage.getMainDocumentPart().addObject(paragraph);
         wordPackage.save(new File(fileName));
     }
 
@@ -59,31 +67,27 @@ public class Docx4JPrinter {
         }
     }
 
-    private void addImageToWord(WordprocessingMLPackage wordMLPackage,
-                                byte[] bytes) throws Exception {
+    private void addImageToWord(WordprocessingMLPackage wordPackage,
+                                byte[] bytes, P paragraph,
+                                ObjectFactory factory) throws Exception {
         BinaryPartAbstractImage imagePart =
-                BinaryPartAbstractImage.createImagePart(wordMLPackage, bytes);
+                BinaryPartAbstractImage.createImagePart(wordPackage, bytes);
 
-        int docPrId = 0;
-        int cNvPrId = 1;
+        int docPrId = 1;
+        int cNvPrId = 2;
         Inline inline = imagePart.createImageInline(null,
                 null, docPrId, cNvPrId, false, maxWidth);
 
-        P paragraph = addInlineImageToParagraph(inline);
-
-        wordMLPackage.getMainDocumentPart().addObject(paragraph);
+        addInlineImageToParagraph(inline, paragraph, factory);
     }
 
 
-    private P addInlineImageToParagraph(Inline inline) {
-        ObjectFactory factory = new ObjectFactory();
-        P paragraph = factory.createP();
+    private void addInlineImageToParagraph(Inline inline, P paragraph, ObjectFactory factory) {
         R run = factory.createR();
         paragraph.getContent().add(run);
         Drawing drawing = factory.createDrawing();
         run.getContent().add(drawing);
         drawing.getAnchorOrInline().add(inline);
-        return paragraph;
     }
 
     private void setPageMargins(Body body) {
