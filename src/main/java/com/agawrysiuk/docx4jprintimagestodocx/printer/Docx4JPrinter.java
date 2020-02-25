@@ -22,28 +22,32 @@ import java.net.URL;
 @Data
 @Builder
 public class Docx4JPrinter {
-    private String pictureLink;
+    //
     private String fileName;
     private boolean landscape;
-    private boolean internetLink;
     private int maxWidth;
     PageSizePaper pageSize;
+
+    private boolean internetLink;
+    private String[] pictureLinks;
 
     public void print() throws Exception {
         WordprocessingMLPackage wordPackage = WordprocessingMLPackage.createPackage(pageSize, landscape);
 
         setPageMargins(wordPackage.getMainDocumentPart().getContents().getBody());
 
-        byte[] bytes = createByteArray();
-        if (bytes == null) {
-            log.warn("Picture too big. Abandoning.");
-            return;
+        for (int i = 0; i < pictureLinks.length; i++) {
+            byte[] bytes = createByteArray(pictureLinks[i]);
+            if (bytes == null) {
+                log.warn("Picture too big. Abandoning.");
+                return;
+            }
+            addImageToWord(wordPackage, bytes);
         }
-        addImageToWord(wordPackage, bytes);
         wordPackage.save(new File(fileName));
     }
 
-    private byte[] createByteArray() throws IOException {
+    private byte[] createByteArray(String pictureLink) throws IOException {
         ImageConverter converter = new ImageConverter();
         if (internetLink) {
             BufferedImage bufferedImage = ImageIO.read(new URL(pictureLink));
