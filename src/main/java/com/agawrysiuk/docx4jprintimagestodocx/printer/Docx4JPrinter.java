@@ -17,6 +17,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.math.BigInteger;
 import java.net.URL;
+import java.util.List;
 
 @Slf4j
 @Data
@@ -29,7 +30,7 @@ public class Docx4JPrinter {
     PageSizePaper pageSize;
 
     private boolean internetLink;
-    private String[] pictureLinks;
+    private List<String> pictureLinks;
 
 
     public void print() throws Exception {
@@ -40,8 +41,8 @@ public class Docx4JPrinter {
         ObjectFactory factory = new ObjectFactory();
         P paragraph = factory.createP();
 
-        for (int i = 0; i < pictureLinks.length; i++) {
-            byte[] bytes = createByteArray(pictureLinks[i]);
+        for (int i = 0; i < pictureLinks.size(); i++) {
+            byte[] bytes = createByteArray(pictureLinks.get(i));
             if (bytes == null) {
                 log.warn("Picture too big. Abandoning.");
                 return;

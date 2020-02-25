@@ -1,12 +1,17 @@
 package com.agawrysiuk.docx4jprintimagestodocx;
 
+import com.agawrysiuk.docx4jprintimagestodocx.downloader.Downloader;
 import com.agawrysiuk.docx4jprintimagestodocx.printer.Docx4JPrinter;
+import com.agawrysiuk.docx4jprintimagestodocx.service.DeckLoader;
 import lombok.extern.slf4j.Slf4j;
 import org.docx4j.model.structure.PageSizePaper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @SpringBootApplication
@@ -17,11 +22,9 @@ public class Docx4jPrintImagesToDocxApplication {
 	}
 
 	@PostConstruct
-	private void init() {
-		String[] arrayLink = new String[] {
-				"https://img.scryfall.com/cards/large/front/1/9/192452f8-93c2-4a20-a52b-0093741a9e45.jpg?1562783094",
-				"https://img.scryfall.com/cards/large/front/3/c/3c84cf70-4164-47ea-8da1-c0ca1ac132e1.jpg?1562611444"
-		};
+	private void init() throws IOException {
+		DeckLoader deckLoader = new DeckLoader(new Downloader());
+		List<String> arrayLink = deckLoader.loadDeck();
 		Docx4JPrinter printer = Docx4JPrinter.builder()
 				.internetLink(true)
 				.pictureLinks(arrayLink)

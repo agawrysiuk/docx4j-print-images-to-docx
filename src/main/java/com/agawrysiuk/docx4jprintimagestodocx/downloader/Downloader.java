@@ -4,11 +4,9 @@ import com.agawrysiuk.docx4jprintimagestodocx.data.Card;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-@Component
 public class Downloader {
 
     public Card[] downloadBulk(String[] cardTitles) {
