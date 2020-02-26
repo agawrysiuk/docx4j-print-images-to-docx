@@ -10,7 +10,6 @@ import org.docx4j.model.structure.PageSizePaper;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.BinaryPartAbstractImage;
 import org.docx4j.wml.*;
-import org.springframework.core.io.ClassPathResource;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -28,8 +27,6 @@ public class Docx4JPrinter {
     private boolean landscape;
     private int maxWidth;
     PageSizePaper pageSize;
-
-    private boolean internetLink;
     private List<String> pictureLinks;
 
 
@@ -47,7 +44,7 @@ public class Docx4JPrinter {
                 log.warn("Picture too big. Abandoning.");
                 return;
             }
-            addImageToWord(wordPackage, bytes, paragraph,factory);
+            addImageToWord(wordPackage, bytes, paragraph, factory);
         }
         wordPackage.getMainDocumentPart().addObject(paragraph);
         wordPackage.save(new File(fileName));
@@ -55,14 +52,8 @@ public class Docx4JPrinter {
 
     private byte[] createByteArray(String pictureLink) throws IOException {
         ImageConverter converter = new ImageConverter();
-        if (internetLink) {
-            BufferedImage bufferedImage = ImageIO.read(new URL(pictureLink));
-            return converter.convertBufferedImageToBytes(bufferedImage);
-        } else {
-            //won't work in a jar file, you need to use a iostream
-            ClassPathResource resource = new ClassPathResource(pictureLink);
-            return converter.convertFileToBytes(resource.getFile());
-        }
+        BufferedImage bufferedImage = ImageIO.read(new URL(pictureLink));
+        return converter.convertBufferedImageToBytes(bufferedImage);
     }
 
     private void addImageToWord(WordprocessingMLPackage wordPackage,

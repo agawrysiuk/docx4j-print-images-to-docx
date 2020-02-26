@@ -2,14 +2,16 @@ package com.agawrysiuk.docx4jprintimagestodocx.service;
 
 import com.agawrysiuk.docx4jprintimagestodocx.data.Card;
 import com.agawrysiuk.docx4jprintimagestodocx.downloader.Downloader;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class DeckLoader {
 
-    private Downloader downloader;
+    private final Downloader downloader;
 
     private String deckSource = "src/main/resources/decks/deck.txt"; //hardcoded for now
 
@@ -29,7 +31,9 @@ public class DeckLoader {
             if(line.equals(" ")) {
                 continue;
             }
-            Card card = downloader.downloadCard(line.split(" ",2)[1]);
+            String cardName = line.split(" ",2)[1];
+            log.info("Downloading card = {}", cardName);
+            Card card = downloader.downloadCard(cardName);
             stringList.add(card.getCardImageLarge());
         }
 

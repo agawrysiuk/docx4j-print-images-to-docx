@@ -1,9 +1,7 @@
 package com.agawrysiuk.docx4jprintimagestodocx.service;
 
 import com.agawrysiuk.docx4jprintimagestodocx.data.Card;
-import org.springframework.stereotype.Service;
 
-@Service
 public class CardConverter {
 
     public String[] convertCardListToStringList(Card[] cardList) {
