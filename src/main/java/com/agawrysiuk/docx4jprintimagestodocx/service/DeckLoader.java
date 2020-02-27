@@ -35,6 +35,9 @@ public class DeckLoader {
             log.info("Downloading card = {}", cardName);
             Card card = downloader.downloadCard(cardName);
             stringList.add(card.getCardImageLarge());
+            if (card.getCardImageTransformLarge() != null) {
+                stringList.add(card.getCardImageTransformLarge());
+            }
         }
 
         return stringList;

@@ -6,4 +6,5 @@ import lombok.Data;
 @Data
 public class Card {
     String cardImageLarge;
+    String cardImageTransformLarge;
 }

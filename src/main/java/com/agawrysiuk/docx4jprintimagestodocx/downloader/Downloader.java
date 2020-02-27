@@ -32,7 +32,13 @@ public class Downloader {
 
         // TODO: 2020-02-25 add some serializer
         Card card = new Card();
-        card.setCardImageLarge(downloadedCard.getJSONObject("image_uris").getString("large"));
+        if(downloadedCard.has("card_faces")) {
+            card.setCardImageLarge(downloadedCard.getJSONArray("card_faces").getJSONObject(0).getJSONObject("image_uris").getString("large"));
+            card.setCardImageTransformLarge(downloadedCard.getJSONArray("card_faces").getJSONObject(1).getJSONObject("image_uris").getString("large"));
+        } else {
+            card.setCardImageLarge(downloadedCard.getJSONObject("image_uris").getString("large"));
+            card.setCardImageTransformLarge(null);
+        }
 
         return card;
     }
