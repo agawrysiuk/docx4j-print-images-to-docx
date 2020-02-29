@@ -1,6 +1,7 @@
 package com.agawrysiuk.docx4jprintimagestodocx.downloader;
 
 import com.agawrysiuk.docx4jprintimagestodocx.data.Card;
+import javafx.scene.image.Image;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -33,12 +34,17 @@ public class Downloader {
         // TODO: 2020-02-25 add some serializer
         Card card = new Card();
         if(downloadedCard.has("card_faces")) {
-            card.setCardImageLarge(downloadedCard.getJSONArray("card_faces").getJSONObject(0).getJSONObject("image_uris").getString("large"));
-            card.setCardImageTransformLarge(downloadedCard.getJSONArray("card_faces").getJSONObject(1).getJSONObject("image_uris").getString("large"));
+            card.setCardImageLargeLink(downloadedCard.getJSONArray("card_faces").getJSONObject(0).getJSONObject("image_uris").getString("large"));
+            card.setCardImage(new Image(downloadedCard.getJSONArray("card_faces").getJSONObject(0).getJSONObject("image_uris").getString("large")));
+            card.setCardImageTransformLargeLink(downloadedCard.getJSONArray("card_faces").getJSONObject(1).getJSONObject("image_uris").getString("large"));
+            card.setCardImageTransform(new Image(downloadedCard.getJSONArray("card_faces").getJSONObject(1).getJSONObject("image_uris").getString("large")));
         } else {
-            card.setCardImageLarge(downloadedCard.getJSONObject("image_uris").getString("large"));
-            card.setCardImageTransformLarge(null);
+            card.setCardImageLargeLink(downloadedCard.getJSONObject("image_uris").getString("large"));
+            card.setCardImage(new Image(downloadedCard.getJSONObject("image_uris").getString("large")));
+            card.setCardImageTransformLargeLink(null);
         }
+
+        card.setName(downloadedCard.getString("name"));
 
         return card;
     }

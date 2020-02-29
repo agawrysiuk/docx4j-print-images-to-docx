@@ -7,7 +7,7 @@ public class CardConverter {
     public String[] convertCardListToStringList(Card[] cardList) {
         String[] stringList = new String[cardList.length];
         for (int i = 0; i < cardList.length; i++) {
-            stringList[i] = cardList[i].getCardImageLarge();
+            stringList[i] = cardList[i].getCardImageLargeLink();
         }
         return stringList;
     }

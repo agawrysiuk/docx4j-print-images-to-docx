@@ -17,11 +17,11 @@ public class DeckLoader {
         this.downloader = downloader;
     }
 
-    public List<String> loadDeck(String deckSource) throws IOException {
+    public List<Card> loadDeck(String deckSource) throws IOException {
 
         BufferedReader br = new BufferedReader(new StringReader(deckSource));
 
-        List<String> stringList = new ArrayList<>();
+        List<Card> cardList = new ArrayList<>();
 
         String line;
         while ((line = br.readLine()) != null) {
@@ -31,12 +31,9 @@ public class DeckLoader {
             String cardName = line.split(" ",2)[1];
             log.info("Downloading card = {}", cardName);
             Card card = downloader.downloadCard(cardName);
-            stringList.add(card.getCardImageLarge());
-            if (card.getCardImageTransformLarge() != null) {
-                stringList.add(card.getCardImageTransformLarge());
-            }
+            cardList.add(card);
         }
 
-        return stringList;
+        return cardList;
     }
 }

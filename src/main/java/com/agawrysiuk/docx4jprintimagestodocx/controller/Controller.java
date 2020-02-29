@@ -23,29 +23,29 @@ public class Controller {
 
     private BorderPane view;
 
-    public void printDeck(TextArea area) {
-        try {
-            DeckLoader deckLoader = new DeckLoader(new Downloader());
-            List<String> arrayLink = deckLoader.loadDeck(area.getText());
-            List<byte[]> byteList = new ArrayList<>();
-
-            for (String link : arrayLink) {
-                ImageToBytesConverter converter = new ImageToBytesConverter();
-                BufferedImage bufferedImage = ImageIO.read(new URL(link));
-                byteList.add(converter.convertBufferedImageToBytes(bufferedImage));
-            }
-
-            Docx4JPrinter printer = Docx4JPrinter.builder()
-                    .pictureLinks(byteList)
-                    .fileName("test-print.docx")
-                    .landscape(true)
-                    .maxWidth(3600) //3580
-                    .pageSize(PageSizePaper.LETTER)
-                    .build();
-            printer.print();
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.warn("Can't print the picture!");
-        }
-    }
+//    public void printDeck(TextArea area) {
+//        try {
+//            DeckLoader deckLoader = new DeckLoader(new Downloader());
+//            List<String> arrayLink = deckLoader.loadDeck(area.getText());
+//            List<byte[]> byteList = new ArrayList<>();
+//
+//            for (String link : arrayLink) {
+//                ImageToBytesConverter converter = new ImageToBytesConverter();
+//                BufferedImage bufferedImage = ImageIO.read(new URL(link));
+//                byteList.add(converter.convertBufferedImageToBytes(bufferedImage));
+//            }
+//
+//            Docx4JPrinter printer = Docx4JPrinter.builder()
+//                    .pictureLinks(byteList)
+//                    .fileName("test-print.docx")
+//                    .landscape(true)
+//                    .maxWidth(3600) //3580
+//                    .pageSize(PageSizePaper.LETTER)
+//                    .build();
+//            printer.print();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            log.warn("Can't print the picture!");
+//        }
+//    }
 }

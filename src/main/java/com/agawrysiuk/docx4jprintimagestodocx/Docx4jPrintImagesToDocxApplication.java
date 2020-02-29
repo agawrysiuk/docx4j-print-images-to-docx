@@ -18,7 +18,7 @@ public class Docx4jPrintImagesToDocxApplication extends Application {
 	public void start(Stage stage) throws Exception {
 		Controller controller = new Controller();
 		View view = new View(controller);
-		controller.setView(view.getView());
+		controller.setView(view.getMainView());
 
 		Scene scene = new Scene(view.asParent(), 400, 400);
 		stage.setTitle("Magic Card Printer");
