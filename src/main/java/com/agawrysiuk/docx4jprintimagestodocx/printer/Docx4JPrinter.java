@@ -1,6 +1,6 @@
 package com.agawrysiuk.docx4jprintimagestodocx.printer;
 
-import com.agawrysiuk.docx4jprintimagestodocx.service.ImageConverter;
+import com.agawrysiuk.docx4jprintimagestodocx.service.ImageToBytesConverter;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class Docx4JPrinter {
     private boolean landscape;
     private int maxWidth;
     PageSizePaper pageSize;
-    private List<String> pictureLinks;
+    private List<byte[]> pictureLinks;
 
 
     public void print() throws Exception {
@@ -39,21 +39,11 @@ public class Docx4JPrinter {
         P paragraph = factory.createP();
 
         for (int i = 0; i < pictureLinks.size(); i++) {
-            byte[] bytes = createByteArray(pictureLinks.get(i));
-            if (bytes == null) {
-                log.warn("Picture too big. Abandoning.");
-                return;
-            }
-            addImageToWord(wordPackage, bytes, paragraph, factory);
+            addImageToWord(wordPackage, pictureLinks.get(i), paragraph, factory);
         }
         wordPackage.getMainDocumentPart().addObject(paragraph);
         wordPackage.save(new File(fileName));
-    }
-
-    private byte[] createByteArray(String pictureLink) throws IOException {
-        ImageConverter converter = new ImageConverter();
-        BufferedImage bufferedImage = ImageIO.read(new URL(pictureLink));
-        return converter.convertBufferedImageToBytes(bufferedImage);
+        log.info("Printing done!");
     }
 
     private void addImageToWord(WordprocessingMLPackage wordPackage,

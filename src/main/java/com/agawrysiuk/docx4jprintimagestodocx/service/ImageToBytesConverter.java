@@ -9,7 +9,7 @@ import java.io.*;
 
 @Slf4j
 @Data
-public class ImageConverter {
+public class ImageToBytesConverter {
 
     public byte[] convertFileToBytes(File file) throws IOException {
         InputStream is = new FileInputStream(file);

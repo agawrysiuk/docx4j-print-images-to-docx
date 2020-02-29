@@ -21,6 +21,8 @@ public class Docx4jPrintImagesToDocxApplication extends Application {
 		controller.setView(view.getView());
 
 		Scene scene = new Scene(view.asParent(), 400, 400);
+		stage.setTitle("Magic Card Printer");
+//		stage.setMaximized(true);
 		stage.setScene(scene);
 		stage.show();
 	}

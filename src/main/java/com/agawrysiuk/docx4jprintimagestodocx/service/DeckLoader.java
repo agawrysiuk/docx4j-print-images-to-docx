@@ -13,16 +13,13 @@ public class DeckLoader {
 
     private final Downloader downloader;
 
-    private String deckSource = "src/main/resources/decks/deck.txt"; //hardcoded for now
-
     public DeckLoader(Downloader downloader) {
         this.downloader = downloader;
     }
 
-    public List<String> loadDeck() throws IOException {
-        File file = new File(deckSource);
+    public List<String> loadDeck(String deckSource) throws IOException {
 
-        BufferedReader br = new BufferedReader(new FileReader(file));
+        BufferedReader br = new BufferedReader(new StringReader(deckSource));
 
         List<String> stringList = new ArrayList<>();
 
