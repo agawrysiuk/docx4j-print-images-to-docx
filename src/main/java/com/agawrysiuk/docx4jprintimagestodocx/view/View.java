@@ -109,6 +109,11 @@ public class View {
     private void printingCard(StackPane stackPane, Card activeCard, int marginStackPane, int rowCards, List<Card> cardList, boolean transform) {
         ImageView addedCard = new ImageView();
         addedCard.setImage(transform ? activeCard.getCardImageTransform() : activeCard.getCardImage());
+        if (!transform) {
+            activeCard.setCardImageView(addedCard);
+        } else {
+            activeCard.setCardImageViewTransform(addedCard);
+        }
         addedCard.setFitWidth(250);
         addedCard.setPreserveRatio(true);
         addedCard.setSmooth(true);
@@ -117,9 +122,19 @@ public class View {
             if (cardList.contains(activeCard)) {
                 cardList.remove(activeCard);
                 addedCard.setEffect(darkerImage);
+                if(transform) {
+                    activeCard.getCardImageView().setEffect(darkerImage);
+                } else if(activeCard.getCardImageTransform()!=null) {
+                    activeCard.getCardImageViewTransform().setEffect(darkerImage);
+                }
             } else {
                 cardList.add(activeCard);
                 addedCard.setEffect(null);
+                if(transform) {
+                    activeCard.getCardImageView().setEffect(null);
+                } else if(activeCard.getCardImageTransform()!=null) {
+                    activeCard.getCardImageViewTransform().setEffect(null);
+                }
             }
         });
         addedCard.setOnMouseEntered(mouseEvent -> {
