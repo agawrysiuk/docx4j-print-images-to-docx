@@ -1,6 +1,5 @@
 package com.agawrysiuk.docx4jprintimagestodocx.printer;
 
-import com.agawrysiuk.docx4jprintimagestodocx.service.ImageToBytesConverter;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -11,11 +10,8 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.BinaryPartAbstractImage;
 import org.docx4j.wml.*;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.math.BigInteger;
-import java.net.URL;
 import java.util.List;
 
 @Slf4j

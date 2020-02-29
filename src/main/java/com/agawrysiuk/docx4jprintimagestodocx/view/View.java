@@ -9,35 +9,36 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 @Data
+@Slf4j
 public class View {
     private BorderPane mainView;
     private int marginStackPane = 25;
     private int rowCards = 25;
     private DeckLoader deckLoader;
     private TextArea area;
+    private ColorAdjust darkerImage;
 
-    private Controller controller ;
+    private Controller controller;
 
     public View(Controller controller) {
-        this.controller = controller ;
+        this.controller = controller;
         this.deckLoader = new DeckLoader(new Downloader());
+        this.darkerImage = new ColorAdjust();
+        darkerImage.setBrightness(-0.5);
         createAndConfigurePane();
     }
 
@@ -60,47 +61,18 @@ public class View {
         mainView.bottomProperty().set(hBox);
     }
 
-//    private void showDialog() {
-//        Dialog<ButtonType> dialog = new Dialog<>();
-//        dialog.setTitle("Downloaded cards");
-//        dialog.setHeaderText(null);
-//
-//        ButtonType confirmButton = new ButtonType("Confirm", ButtonBar.ButtonData.OK_DONE);
-//        dialog.getDialogPane().getButtonTypes().addAll(confirmButton, ButtonType.CANCEL);
-//
-//        GridPane gridPane = new GridPane();
-//        gridPane.setVgap(10);
-//        gridPane.setHgap(10);
-//        gridPane.setAlignment(Pos.CENTER);
-//
-//        List<Boolean> previousStates = new ArrayList<>();
-//
-//        for(int i = 0; i<listCheckBox.size();i++) {
-//            gridPane.add(listCheckBox.get(i),0,i);
-//            previousStates.add(listCheckBox.get(i).isSelected());
-//        }
-//
-//        dialog.getDialogPane().setContent(gridPane);
-//        dialog.initModality(Modality.APPLICATION_MODAL); //this is the only window you can use
-//        dialog.initOwner(mainView.getScene().getWindow());
-//        dialog.setWidth(800);
-//        dialog.setHeight(800);
-//        Optional<ButtonType> result = dialog.showAndWait();
-//        if(result.isPresent() && result.get() == confirmButton) {
-//            controller.printDeck(new TextArea());
-//        }
-//    }
-
     public void lookUpDeck() {
         this.rowCards = 25;
         this.marginStackPane = 25;
-        StackPane stackPane = new StackPane();
+        BorderPane sideView = new BorderPane();
 
+        StackPane stackPane = new StackPane();
         stackPane.setAlignment(Pos.TOP_LEFT);
+        sideView.setCenter(stackPane);
 
         Stage secondStage = new Stage();
         secondStage.setTitle("Downloaded cards");
-        secondStage.setScene(new Scene(stackPane, 1600, 900));
+        secondStage.setScene(new Scene(sideView, 1920, 900));
         List<Card> cardList;
 
         try {
@@ -111,28 +83,58 @@ public class View {
         }
 
         for (Card card : cardList) {
-            printingCard(stackPane, card, marginStackPane, rowCards);
+            printingCard(stackPane, card, marginStackPane, rowCards, cardList, false);
+            if (card.getCardImageTransform() != null) {
+                printingCard(stackPane, card, marginStackPane, rowCards, cardList, true);
+            }
         }
+
+        Button button = new Button("Confirm");
+        button.setOnMouseClicked(mouseEvent ->  {
+            controller.printDeck(cardList);
+            secondStage.close();
+        });
+
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.BASELINE_CENTER);
+        hBox.getChildren().add(button);
+
+        sideView.setBottom(hBox);
 
         secondStage.initModality(Modality.APPLICATION_MODAL); //this is the only window you can use
         secondStage.initOwner(mainView.getScene().getWindow());
         secondStage.show();
     }
 
-    private void printingCard(StackPane stackPane, Card activeCard, int marginStackPane, int rowCards) {
+    private void printingCard(StackPane stackPane, Card activeCard, int marginStackPane, int rowCards, List<Card> cardList, boolean transform) {
         ImageView addedCard = new ImageView();
-        addedCard.setImage(activeCard.getCardImage());
+        addedCard.setImage(transform ? activeCard.getCardImageTransform() : activeCard.getCardImage());
         addedCard.setFitWidth(250);
         addedCard.setPreserveRatio(true);
         addedCard.setSmooth(true);
         addedCard.setCache(true);
+        addedCard.setOnMouseClicked(mouseEvent -> {
+            if (cardList.contains(activeCard)) {
+                cardList.remove(activeCard);
+                addedCard.setEffect(darkerImage);
+            } else {
+                cardList.add(activeCard);
+                addedCard.setEffect(null);
+            }
+        });
+        addedCard.setOnMouseEntered(mouseEvent -> {
+            addedCard.setViewOrder(-1);
+        });
+        addedCard.setOnMouseExited(mouseEvent -> {
+            addedCard.setViewOrder(0);
+        });
         StackPane.setMargin(addedCard, new Insets(marginStackPane, 0, 0, rowCards)); //sets the place where the card image will be printed
 
-        Tooltip tooltip = new Tooltip();
-        tooltip.setGraphic(new ImageView(activeCard.getCardImage()));
-        tooltip.setShowDelay(Duration.millis(100));
-        tooltip.setShowDuration(Duration.seconds(30));
-        Tooltip.install(addedCard, tooltip);
+//        Tooltip tooltip = new Tooltip();
+//        tooltip.setGraphic(new ImageView(activeCard.getCardImage()));
+//        tooltip.setShowDelay(Duration.millis(100));
+//        tooltip.setShowDuration(Duration.seconds(30));
+//        Tooltip.install(addedCard, tooltip);
 
         Label label = new Label();
         label.setText(activeCard.getName());

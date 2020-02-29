@@ -25,7 +25,7 @@ public class DeckLoader {
 
         String line;
         while ((line = br.readLine()) != null) {
-            if(line.equals(" ")) {
+            if(line.replaceAll(" ","").equals("")) {
                 continue;
             }
             String cardName = line.split(" ",2)[1];
