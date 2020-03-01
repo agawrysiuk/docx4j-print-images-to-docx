@@ -33,7 +33,7 @@ public class Downloader {
 
         // TODO: 2020-02-25 add some serializer
         Card card = new Card();
-        if(downloadedCard.has("card_faces")) {
+        if(downloadedCard.has("card_faces") && !downloadedCard.has("image_uris")) {
             card.setCardImageLargeLink(downloadedCard.getJSONArray("card_faces").getJSONObject(0).getJSONObject("image_uris").getString("large"));
             card.setCardImage(new Image(downloadedCard.getJSONArray("card_faces").getJSONObject(0).getJSONObject("image_uris").getString("large")));
             card.setCardImageTransformLargeLink(downloadedCard.getJSONArray("card_faces").getJSONObject(1).getJSONObject("image_uris").getString("large"));
