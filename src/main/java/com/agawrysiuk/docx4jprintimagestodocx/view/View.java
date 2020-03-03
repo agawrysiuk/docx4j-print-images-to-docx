@@ -53,7 +53,7 @@ public class View {
         mainView.centerProperty().set(area);
 
         Button button = new Button("Print!");
-        button.setOnMouseClicked(mouseEvent -> lookUpDeck());
+        button.setOnMouseClicked(mouseEvent -> printDeckOnTheScreen());
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.BASELINE_CENTER);
         hBox.getChildren().add(button);
@@ -61,7 +61,7 @@ public class View {
         mainView.bottomProperty().set(hBox);
     }
 
-    public void lookUpDeck() {
+    public void printDeckOnTheScreen() {
         this.rowCards = 25;
         this.marginStackPane = 25;
         BorderPane sideView = new BorderPane();

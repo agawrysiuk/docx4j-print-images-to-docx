@@ -37,6 +37,7 @@ public class Docx4JPrinter {
         for (int i = 0; i < pictureLinks.size(); i++) {
             addImageToWord(wordPackage, pictureLinks.get(i), paragraph, factory);
         }
+
         wordPackage.getMainDocumentPart().addObject(paragraph);
         wordPackage.save(new File(fileName));
         log.info("Printing done!");
