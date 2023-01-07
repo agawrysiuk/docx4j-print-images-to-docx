@@ -10,13 +10,14 @@ import { Card } from './card';
 export class AppComponent {
   title = 'new-frontend';
   cards: Card[] = [];
-  cardNames: string = "";
+  pastedText: string = "";
   cardLinks: string[] = [];
+  imgSrcRegex = new RegExp("src\s*=\s*\"(.+?)\"", "g")
 
   constructor(private appHttpService: AppHttpService) {}
 
-  downloadPaths() {
-    const splitArray = this.cardNames.split(/\r?\n/).filter(element => element);
+  downloadMtgPaths() {
+    const splitArray = this.pastedText.split(/\r?\n/).filter(element => element);
     this.appHttpService.getCards(splitArray).then((res: Card[]) => {
       this.cards = res
       const regularLinks = res.filter(card => card.image_uris).map(card => card.image_uris!!.large)
@@ -29,6 +30,11 @@ export class AppComponent {
     this.appHttpService.printCards(this.cardLinks).then(res => {
       console.log(res);
     })
+  }
+
+  printImgLinks () {
+    this.cardLinks = Array.from(this.pastedText.matchAll(this.imgSrcRegex), x=>x[1]);
+    this.print();
   }
 }
 
