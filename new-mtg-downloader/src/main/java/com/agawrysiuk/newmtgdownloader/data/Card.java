@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -16,11 +18,21 @@ public class Card {
     private String name;
     @JsonProperty("image_uris")
     private CardImages images;
+    @JsonProperty("card_faces")
+    private List<CardFaces> faces;
 
     @AllArgsConstructor
     @NoArgsConstructor
     @Getter
-    public class CardImages {
+    public static class CardImages {
         private String large;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    public static class CardFaces {
+        @JsonProperty("image_uris")
+        private CardImages images;
     }
 }
