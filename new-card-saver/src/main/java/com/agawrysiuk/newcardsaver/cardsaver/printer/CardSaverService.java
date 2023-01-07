@@ -28,7 +28,8 @@ public class CardSaverService {
         printer.print();
     }
 
-    public byte[] downloadToBytes(String cardLink) throws IOException {
+    @SneakyThrows
+    public byte[] downloadToBytes(String cardLink) {
         var url = new URL(cardLink);
         try (InputStream is = url.openStream()) {
             return IOUtils.toByteArray(is);
