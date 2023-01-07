@@ -21,7 +21,9 @@ export class AppComponent {
     })
   }
 
-  clean() {
-    this.cards = []
+  print() {
+    this.appHttpService.printCards(this.cards.map(card => card.image_uris.large).filter(link => link)).then(res => {
+      console.log(res);
+    })
   }
 }
