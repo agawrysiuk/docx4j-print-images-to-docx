@@ -1,6 +1,6 @@
 <div class="toolbar" role="banner">
-  <span class="title">Card Downloader</span>
   <div class="spacer"></div>
+  <span class="title">Card Downloader</span>
 </div>
 
 <div class="content" role="main">
@@ -11,7 +11,7 @@
     <div class="column">
       <div class="card-container">
         <button class="card" target="_blank" rel="noopener" (click)="downloadMtgPaths()">
-          <span>Download MTG Cards</span>
+          <span>Download MTG Card Paths</span>
           <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
             <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
           </svg> 
@@ -19,18 +19,29 @@
       </div>
       <div class="card-container">
         <button class="card" target="_blank" rel="noopener" (click)="printImgLinks()">
-          <span>Print IMG links directly</span>
+          <span>Print IMG links to DOCX</span>
           <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
             <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
           </svg> 
         </button>
+      </div>
+      <div class="card-container">
+        <button class="card" target="_blank" rel="noopener" (click)="saveImgsToFolder(folderPath.value)">
+          <span>Print IMG links to folder</span>
+          <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+          </svg> 
+        </button>
+      </div>
+      <div class="card-container">
+        <input #folderPath type="text" id="folderPath" placeholder="Folder name" />
       </div>
     </div>
   </div>
   <div *ngIf="cards.length > 0" class="content">
     <p>Click "PRINT" if you are satisfied with cards:</p>
     <div class="card-container">
-      <button class="card" target="_blank" rel="noopener" (click)="print()">
+      <button class="card" target="_blank" rel="noopener" (click)="printToDocx()">
         <span>PRINT</span>
         <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
           <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />

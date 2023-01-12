@@ -4,7 +4,8 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
-import { AppHttpService } from './appHttpService';
+import { AppHttpService } from './common/appHttpService';
+import { StringService } from './common/string.service';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,7 @@ import { AppHttpService } from './appHttpService';
     HttpClientModule,
     FormsModule
   ],
-  providers: [AppHttpService],
+  providers: [AppHttpService, StringService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

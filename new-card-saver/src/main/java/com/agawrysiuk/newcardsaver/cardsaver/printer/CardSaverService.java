@@ -42,6 +42,7 @@ public class CardSaverService {
 
     public void toFolder(SaveToFolderRequest request) {
         request.getCardLinks().forEach(link -> downloadToFolder(link, request.getFolderPath()));
+        log.info("All images saved.");
     }
 
     @SneakyThrows
@@ -56,11 +57,13 @@ public class CardSaverService {
     }
 
     @SneakyThrows
-    public void downloadToFolder(String link, String folderPath) {
+    public void downloadToFolder(String link, String folderName) {
         try(InputStream in = new URL(StringExtractor.removeParams(link)).openStream()){
             String parentFolder = envVariables.getParentSaveFolder();
-            Path something = Files.createDirectories(Paths.get(parentFolder).resolve(folderPath));
-            Files.copy(in, something.resolve(StringExtractor.parseFileName(link)));
+            Path folderPath = Files.createDirectories(Paths.get(parentFolder).resolve(folderName));
+            Path fullPath = folderPath.resolve(StringExtractor.parseFileName(link));
+            Files.copy(in, fullPath);
+            log.info("Saved {} to {}", link, fullPath);
         }
     }
 }

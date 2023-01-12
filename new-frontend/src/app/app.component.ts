@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { AppHttpService } from './appHttpService';
+import { AppHttpService } from './common/appHttpService';
 import { Card } from './card';
+import { StringService } from './common/string.service';
 
 @Component({
   selector: 'app-root',
@@ -12,9 +13,9 @@ export class AppComponent {
   cards: Card[] = [];
   pastedText: string = "";
   cardLinks: string[] = [];
-  imgSrcRegex = new RegExp("src\s*=\s*\"(.+?)\"", "g")
 
-  constructor(private appHttpService: AppHttpService) {}
+  constructor(private appHttpService: AppHttpService,
+    private stringService: StringService) {}
 
   downloadMtgPaths() {
     const splitArray = this.pastedText.split(/\r?\n/).filter(element => element);
@@ -26,15 +27,22 @@ export class AppComponent {
     })
   }
 
-  print() {
-    this.appHttpService.printCards(this.cardLinks).then(res => {
+  printToDocx() {
+    this.appHttpService.printCardsToDocx(this.cardLinks).then(res => {
       console.log(res);
     })
   }
 
-  printImgLinks () {
-    this.cardLinks = Array.from(this.pastedText.matchAll(this.imgSrcRegex), x=>x[1]);
-    this.print();
+  printImgLinks() {
+    this.cardLinks = this.stringService.getPicsFromText(this.pastedText);
+    this.printToDocx();
+  }
+
+  saveImgsToFolder(folderPath: string) {
+    this.cardLinks = this.stringService.getPicsFromText(this.pastedText);
+    this.appHttpService.printCardsToFolder(this.cardLinks, folderPath).then(res => {
+      console.log(res);
+    })
   }
 }
 
