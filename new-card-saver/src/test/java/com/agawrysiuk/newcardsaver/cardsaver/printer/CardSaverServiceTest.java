@@ -46,4 +46,13 @@ class CardSaverServiceTest {
         Files.delete(folder);
     }
 
+    @Test
+    public void fromFolderToDocx_should_create_docx_with_images() {
+        // given
+        String folder = "/home/agawrysiuk//Downloads/Standalone Adventures/Murder at the Excelsior Hotel/fixed/";
+
+        // when
+        service.fromFolderToDocx(folder);
+    }
+
 }

@@ -18,6 +18,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.agawrysiuk.newcardsaver.cardsaver.common.StringExtractor.parseFileName;
 import static com.agawrysiuk.newcardsaver.cardsaver.common.StringExtractor.removeParams;
@@ -62,7 +63,7 @@ public class CardSaverService {
     }
 
     @SneakyThrows
-    public byte[] downloadToBytes(String cardLink) {
+    private byte[] downloadToBytes(String cardLink) {
         var url = new URL(cardLink);
         try (InputStream is = url.openStream()) {
             return IOUtils.toByteArray(is);
@@ -73,11 +74,36 @@ public class CardSaverService {
     }
 
     @SneakyThrows
-    public void downloadToFolder(String link, Path folderPath) {
+    private void downloadToFolder(String link, Path folderPath) {
         try (InputStream in = new URL(removeParams(link)).openStream()) {
             Path fullPath = folderPath.resolve(parseFileName(link));
             Files.copy(in, fullPath);
             log.info("Saved {} to {}", link, fullPath);
         }
+    }
+
+    @SneakyThrows
+    public void fromFolderToDocx(String folderPath) {
+        try (Stream<Path> paths = Files.walk(Paths.get(folderPath))) {
+            List<byte[]> byteList = paths
+                    .filter(Files::isRegularFile)
+                    .map(this::toBytes)
+                    .toList();
+
+            Docx4JPrinter printer = Docx4JPrinter.builder()
+                    .pictureLinks(byteList)
+                    .fileName("test-print.docx")
+                    .landscape(true)
+                    .maxWidth(3600) //3580
+                    .pageSize(PageSizePaper.LETTER)
+                    .build();
+
+            printer.print();
+        }
+    }
+
+    @SneakyThrows
+    private byte[] toBytes(Path path) {
+        return Files.readAllBytes(path);
     }
 }
