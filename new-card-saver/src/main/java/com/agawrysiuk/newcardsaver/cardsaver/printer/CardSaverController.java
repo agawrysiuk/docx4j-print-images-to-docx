@@ -1,5 +1,6 @@
 package com.agawrysiuk.newcardsaver.cardsaver.printer;
 
+import com.agawrysiuk.newcardsaver.cardsaver.dto.SaveToFolderRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,8 +16,13 @@ public class CardSaverController {
 
     private final CardSaverService service;
 
-    @PostMapping("/print")
-    public void print(@RequestBody List<String> cardLinks) {
-        service.print(cardLinks);
+    @PostMapping("/to-docx")
+    public void toDocx(@RequestBody List<String> cardLinks) {
+        service.toDocx(cardLinks);
+    }
+
+    @PostMapping("/to-folder")
+    public void toFolder(@RequestBody SaveToFolderRequest request) {
+        service.toFolder(request);
     }
 }

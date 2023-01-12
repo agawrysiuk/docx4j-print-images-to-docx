@@ -1,6 +1,11 @@
 package com.agawrysiuk.newcardsaver.cardsaver.printer;
 
+import com.agawrysiuk.newcardsaver.cardsaver.common.ApplicationEnvVariables;
+import com.agawrysiuk.newcardsaver.cardsaver.common.StringExtractor;
+import com.agawrysiuk.newcardsaver.cardsaver.dto.SaveToFolderRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.docx4j.model.structure.PageSizePaper;
 import org.springframework.stereotype.Service;
@@ -8,13 +13,20 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class CardSaverService {
 
+    private final ApplicationEnvVariables envVariables;
+
     @SneakyThrows
-    public void print(List<String> cardLinks) {
+    public void toDocx(List<String> cardLinks) {
         List<byte[]> byteList = cardLinks.stream().map(this::downloadToBytes).toList();
 
         Docx4JPrinter printer = Docx4JPrinter.builder()
@@ -28,6 +40,10 @@ public class CardSaverService {
         printer.print();
     }
 
+    public void toFolder(SaveToFolderRequest request) {
+        request.getCardLinks().forEach(link -> downloadToFolder(link, request.getFolderPath()));
+    }
+
     @SneakyThrows
     public byte[] downloadToBytes(String cardLink) {
         var url = new URL(cardLink);
@@ -36,6 +52,15 @@ public class CardSaverService {
         } catch (IOException e) {
             System.err.printf("Failed while reading bytes from %s: %s", url.toExternalForm(), e.getMessage());
             throw e;
+        }
+    }
+
+    @SneakyThrows
+    public void downloadToFolder(String link, String folderPath) {
+        try(InputStream in = new URL(StringExtractor.removeParams(link)).openStream()){
+            String parentFolder = envVariables.getParentSaveFolder();
+            Path something = Files.createDirectories(Paths.get(parentFolder).resolve(folderPath));
+            Files.copy(in, something.resolve(StringExtractor.parseFileName(link)));
         }
     }
 }
