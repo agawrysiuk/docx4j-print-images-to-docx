@@ -49,7 +49,7 @@ class CardSaverServiceTest {
     @Test
     public void fromFolderToDocx_should_create_docx_with_images() {
         // given
-        String folder = "/home/agawrysiuk//Downloads/Standalone Adventures/Murder at the Excelsior Hotel/fixed/";
+        String folder = "/home/agawrysiuk/Downloads/Arkham Horror LCG/Investigator Starter Decks/Stella Clark/ArkhamDB/original";
 
         // when
         service.fromFolderToDocx(folder);

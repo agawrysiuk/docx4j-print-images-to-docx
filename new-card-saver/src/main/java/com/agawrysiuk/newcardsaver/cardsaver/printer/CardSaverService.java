@@ -55,7 +55,7 @@ public class CardSaverService {
         Path folderPath = Files.createDirectories(Paths.get(parentFolder).resolve(request.getFolderPath()));
 
         counts.keySet().forEach(link -> downloadToFolder(link, folderPath));
-        log.info("All images saved.");
+        log.info("All images saved. Image count: {}", counts.values().stream().reduce(0L, Long::sum));
         String infoTxtContent = counts.entrySet().stream().map(entry -> "" + entry.getValue() + "," + parseFileName(entry.getKey()))
                 .collect(Collectors.joining(lineSeparator()));
         Files.writeString(folderPath.resolve("info.txt"), infoTxtContent);

@@ -28,21 +28,27 @@ export class AppComponent {
   }
 
   printToDocx() {
-    this.appHttpService.printCardsToDocx(this.cardLinks).then(res => {
+    this.appHttpService.printCardsToDocx(this.pastedText.split(/\r?\n/)).then(res => {
       console.log(res);
     })
-  }
-
-  printImgLinks() {
-    this.cardLinks = this.stringService.getPicsFromText(this.pastedText);
-    this.printToDocx();
   }
 
   saveImgsToFolder(folderPath: string) {
-    this.cardLinks = this.stringService.getPicsFromText(this.pastedText);
-    this.appHttpService.printCardsToFolder(this.cardLinks, folderPath).then(res => {
+    this.appHttpService.printCardsToFolder(this.pastedText.split(/\r?\n/), folderPath).then(res => {
       console.log(res);
     })
+  }
+
+  getImgLinks() {
+    this.cardLinks = this.stringService.getPicsFromText(this.pastedText);
+    this.pastedText = this.cardLinks.join("\r\n");
+  }
+
+  acquireArkhamDbLinks() {
+    this.cardLinks = this.stringService.getHrefsFromText(this.pastedText)
+    .map(link => link.replace("https://arkhamdb.com/card/", "https://arkhamdb.com/bundles/cards/"))
+    .map(link => link + ".png");
+    this.pastedText = this.cardLinks.join("\r\n");
   }
 }
 
