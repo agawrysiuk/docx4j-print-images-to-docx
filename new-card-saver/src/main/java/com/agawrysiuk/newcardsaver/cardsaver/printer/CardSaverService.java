@@ -51,7 +51,10 @@ public class CardSaverService {
         Map<String, Long> counts = request.getCardLinks().stream()
                 .collect(Collectors.groupingBy(e -> e, counting()));
         String parentFolder = envVariables.getParentSaveFolder();
-        Path folderPath = Files.createDirectories(Paths.get(parentFolder).resolve(request.getFolderPath()));
+        Path folderPath = Paths.get(parentFolder).resolve(request.getFolderPath());
+        if (!Files.exists(folderPath)) {
+            Files.createDirectories(folderPath);
+        }
 
         counts.keySet().forEach(link -> downloadToFolder(link, folderPath));
         log.info("All images saved. Image count: {}", counts.values().stream().reduce(0L, Long::sum));
